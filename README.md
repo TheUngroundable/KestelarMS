@@ -1,2 +1,2 @@
-# KestelarMS
-Kestelar Management System - Backend "Framework"
+# LandorMS
+Landor Management System - Backend "Framework"

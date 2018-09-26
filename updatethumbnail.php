@@ -1,8 +1,55 @@
-<?php 
+<?php
 
   include("util/phplib.php");
-
+  
   checkIfLogged();
+
+  require 'util/compressor/autoload.php';
+
+  !empty($_GET['id']) ? $id = $_GET['id'] : header("Location: index.php");
+  !empty($_GET['type']) ? $type = $_GET['type'] : header("Location: index.php");
+
+  !empty($_GET['success']) ? $success = true : $success = false; 
+
+  
+  if($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+
+        //we get the thumbnail name, we remove it from the server and we put the new image with the saved name :
+        $sql="SELECT Percorso FROM img_".$type." WHERE ID = ".$id;
+        $result = $conn->query($sql) or die ($conn->mysql_errno());
+        $percorsoTemp = $result->fetch_array();
+
+        $percorso = $percorsoTemp['Percorso'];
+        $temp = $_FILES["files"]["tmp_name"];
+        
+         
+        $thumbnailsFolder = "../img/".$type."/thumbnails";
+
+                   
+        //let's compress it
+
+        $quality = 60; // Value that I chose
+
+        if(file_exists("../img/".$type."/thumbnails".$percorso)){
+
+          unlink("../img/".$type."/thumbnails".$percorso);
+
+        }
+        
+        $percorso = substr($percorso, 1);
+        
+         //move_uploaded_file($temp, $thumbnailsFolder."/".$percorso);
+        $image_compress = new Compress($temp, $percorso, $quality, $thumbnailsFolder);
+
+        $image_compress->compress_image();
+
+        //the compressed one goes into the thumbnails folder
+
+        header("Location: manage".$type."images.php?success=true");
+
+  }
+
 
 ?>
 
@@ -24,6 +71,7 @@
   <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
+
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -35,116 +83,58 @@
         <li class="breadcrumb-item">
           <a href="../index.php">.nobody&co.</a>
         </li>
-        <li class="breadcrumb-item active">Dashboard</li>
+        <li class="breadcrumb-item active">Modifica una Thumbnail</li>
       </ol>
       <!-- Example DataTables Card-->
       <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-table"></i> Gestisci le News</div>
+            <i class="fa fa-file"></i> Modifica una Thumbnail
+        </div>
         <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
-              <thead>
-                <tr>
-                  <th>Categoria</th>
-                  <th>Data</th>
-                  <th>Titolo Italiano</th>
-                  <th>Titolo Inglese</th>
-                  <th>Immagini</th>
-                  <th>Rimuovi</th>
-                  <th>Modifica</th>
-                  <!--<th>Sposta in Alto</th>
-                  <th>Sposta in Basso</th>-->
-                </tr>
-              </thead>
-              <tbody class="text-center">
+          <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-md-12">
+                  <input class="form-control" id="images" type="file" aria-describedby="imagesHelp" placeholder="Aggiungi Foto" name="files" required ><br>
+                  <button class="btn btn-primary btn-block" type="submit" name="submit">Sostituisci la Thumbnail</button>
+                </div>
+              </div>
+            </div>        
+          </form>
+          <div class="row text-center">
+            <?php 
+            
+            $sql = "SELECT Percorso FROM img_".$type." WHERE ID = ".$id;
+            $result = $conn->query($sql);
 
-                <?php
+            $percorsoTemp = $result->fetch_assoc();
+            $percorso = $percorsoTemp['Percorso'];
 
-                  $sql = "SELECT news.id as ID, news.data as Data, categoria.categoria as Categoria FROM news, categoria WHERE news.fk_categoria = categoria.id ORDER BY Categoria desc";
-                  $result = $conn->query($sql);
-
-                  while($row = $result->fetch_array()){
-
-                ?>
-
-               
-
-                <tr>
-                  <td><?php echo $row['Categoria'] ?></td>
-                  <td><?php echo $row['Data'] ?></td>
-                  <?php 
-
-                  $query = "SELECT Titolo FROM contenuto_news WHERE FK_Lang = 1 AND FK_News = ".$row['ID'];
-
-                  $risultato = $conn->query($query);
-
-                  while($riga = $risultato->fetch_array()){
-
-                  ?>
-
-                  <td><?php echo $riga['Titolo'] ?></td>
-
-                  <?php 
-
-                  }
-
-                  $query = "SELECT Titolo FROM contenuto_news WHERE FK_Lang = 2 AND FK_News = ".$row['ID'];
-
-                  $risultato = $conn->query($query);
-
-                  while($riga = $risultato->fetch_array()){
-
-                  ?>
-
-                  <td><?php echo $riga['Titolo'] ?></td>
-
-                  <?php 
-
-                  }
-
-                  ?>
-
-                  <?php
-
-                  $query = "SELECT COUNT(FK_News) as Count FROM img_news WHERE FK_News = ".$row['ID'];
-
-                  $risultato = $conn->query($query);
-
-                  while($riga = $risultato->fetch_array()){
-
-                  ?>
-
-                  <td><?php echo $riga['Count'] ?></td>
-
-                  <?php
-
-                  }
-
-                  ?>
-
-
-                  
-                  <td><a href="util/news/deletenews.php?id=<?php echo $row['ID'] ?>"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
-                  <td><a href="editnews.php?id=<?php echo $row['ID'] ?>"><button class="btn btn-warning"><i class="fa fa-wrench"></i></button></td>
-                  
-                  <!--<td><a href="util/category/movepressup.php?id=<?php echo $row['ID'] ?>"><button class="btn"><i class="fa fa-chevron-up"></i></button></td>
-                  
-                  <td><a href="util/category/movepressdown.php?id=<?php echo $row['ID'] ?>"><button class="btn"><i class="fa fa-chevron-down"></i></button></td>-->
-                </tr>
-
-                <?php
-
-                }
-
-                ?>
-                
-              </tbody>
-            </table>
+            ?>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  Immagine HD
+                </div>
+                <div class="card-body">
+                  <img src="../img/<?php echo $type."/hd".$percorso ?>">
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  Immagine Thumbnail
+                </div>
+                <div class="card-body">
+                  <img src="../img/<?php echo $type."/thumbnails".$percorso ?>">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      
       </div>
     </div>
     <!-- /.container-fluid-->
@@ -192,7 +182,10 @@
     <!-- Custom scripts for this page-->
     <script src="js/sb-admin-datatables.min.js"></script>
     <script src="js/sb-admin-charts.min.js"></script>
-  </div>
+
+    
+    
+ 
 </body>
 
 </html>

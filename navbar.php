@@ -1,6 +1,8 @@
 <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="index.php">Kestelar Managment System</a>
+
+    <a class="navbar-brand" href="index.php">Landor Managment System</a>
+
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -37,6 +39,28 @@
                 </li>
                 <li>
                   <a href="addpress.php"><i class="fa fa-fw fa-plus"></i> Inserisci una Press</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseCategorie"><i class="fa fa-fw fa-filter"></i> Categorie</a>
+              <ul class="sidenav-third-level collapse" id="collapseCategorie">
+                <li>
+                  <a href="managecategory.php"><i class="fa fa-fw fa-gear"></i> Gestisci le Categorie</a>
+                </li>
+                <li>
+                  <a href="addcategory.php"><i class="fa fa-fw fa-plus"></i> Inserisci una Categoria</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseImmagini"><i class="fa fa-fw fa-file"></i> Gestione Immagini</a>
+              <ul class="sidenav-third-level collapse" id="collapseImmagini">
+                <li>
+                  <a href="managenewsimages.php"><i class="fa fa-fw fa-gear"></i> Gestisci le Immagini NEWS</a>
+                </li>
+                <li>
+                  <a href="managepressimages.php"><i class="fa fa-fw fa-gear"></i> Gestisci le Immagini PRESS</a>
                 </li>
               </ul>
             </li>

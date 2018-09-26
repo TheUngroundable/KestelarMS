@@ -40,97 +40,42 @@
       <!-- Example DataTables Card-->
       <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-table"></i> Gestisci le News</div>
+          <i class="fa fa-table"></i> Gestisci le Categorie</div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-bordered " id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
+                  <th>ID</th>
                   <th>Categoria</th>
-                  <th>Data</th>
-                  <th>Titolo Italiano</th>
-                  <th>Titolo Inglese</th>
-                  <th>Immagini</th>
                   <th>Rimuovi</th>
                   <th>Modifica</th>
-                  <!--<th>Sposta in Alto</th>
-                  <th>Sposta in Basso</th>-->
+                  <th>Sposta in Alto</th>
+                  <th>Sposta in Basso</th>
                 </tr>
               </thead>
               <tbody class="text-center">
 
                 <?php
 
-                  $sql = "SELECT news.id as ID, news.data as Data, categoria.categoria as Categoria FROM news, categoria WHERE news.fk_categoria = categoria.id ORDER BY Categoria desc";
+                  $sql = "SELECT * FROM categoria";
                   $result = $conn->query($sql);
 
                   while($row = $result->fetch_array()){
 
                 ?>
 
-               
-
                 <tr>
+                  <td><?php echo $row['ID'] ?></td>
+                  
                   <td><?php echo $row['Categoria'] ?></td>
-                  <td><?php echo $row['Data'] ?></td>
-                  <?php 
-
-                  $query = "SELECT Titolo FROM contenuto_news WHERE FK_Lang = 1 AND FK_News = ".$row['ID'];
-
-                  $risultato = $conn->query($query);
-
-                  while($riga = $risultato->fetch_array()){
-
-                  ?>
-
-                  <td><?php echo $riga['Titolo'] ?></td>
-
-                  <?php 
-
-                  }
-
-                  $query = "SELECT Titolo FROM contenuto_news WHERE FK_Lang = 2 AND FK_News = ".$row['ID'];
-
-                  $risultato = $conn->query($query);
-
-                  while($riga = $risultato->fetch_array()){
-
-                  ?>
-
-                  <td><?php echo $riga['Titolo'] ?></td>
-
-                  <?php 
-
-                  }
-
-                  ?>
-
-                  <?php
-
-                  $query = "SELECT COUNT(FK_News) as Count FROM img_news WHERE FK_News = ".$row['ID'];
-
-                  $risultato = $conn->query($query);
-
-                  while($riga = $risultato->fetch_array()){
-
-                  ?>
-
-                  <td><?php echo $riga['Count'] ?></td>
-
-                  <?php
-
-                  }
-
-                  ?>
-
-
                   
-                  <td><a href="util/news/deletenews.php?id=<?php echo $row['ID'] ?>"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
-                  <td><a href="editnews.php?id=<?php echo $row['ID'] ?>"><button class="btn btn-warning"><i class="fa fa-wrench"></i></button></td>
+                  <td><a href="util/category/deletecategory.php?id=<?php echo $row['ID'] ?>"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
+                  <td><a href="editcategory.php?id=<?php echo $row['ID'] ?>"><button class="btn btn-warning"><i class="fa fa-wrench"></i></button></td>
                   
-                  <!--<td><a href="util/category/movepressup.php?id=<?php echo $row['ID'] ?>"><button class="btn"><i class="fa fa-chevron-up"></i></button></td>
+                  <td><a href="util/category/movecategoryup.php?id=<?php echo $row['ID'] ?>"><button class="btn"><i class="fa fa-chevron-up"></i></button></td>
                   
-                  <td><a href="util/category/movepressdown.php?id=<?php echo $row['ID'] ?>"><button class="btn"><i class="fa fa-chevron-down"></i></button></td>-->
+                  <td><a href="util/category/movecategorydown.php?id=<?php echo $row['ID'] ?>"><button class="btn"><i class="fa fa-chevron-down"></i></button></td>
                 </tr>
 
                 <?php

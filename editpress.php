@@ -1,22 +1,27 @@
 <?php
-  
-  include("util/phplib.php");
 
+  include("util/phplib.php");
+  
   checkIfLogged();
 
   require 'util/compressor/autoload.php';
 
-  if(!isset($_SESSION['session'])){ 
-  
-    //header("Location: util/logout.php");  
-  
-  }
-  
 
-  empty($_GET['success']) ? $success = false : $success = true;
+  $err = false;
+  !empty($_GET['success']) ? $success = true : $success = false; 
 
+  if(isset($_GET['id'])){
 
-  $italianTitle = $englishTitle = $italianDescription = $englishDescription = $category = $dateTime = "";
+      $getID = $_GET['id'];
+      $pressID = $getID;
+
+    } else {
+
+      $err = true;
+
+    }
+
+  $italianText = $englishText = $category = $dateTime = "";
   $err = false;
 
   
@@ -24,13 +29,9 @@
 
     //validation
 
-    !empty($_POST['italianTitle']) ? $italianTitle = sanitize($_POST['italianTitle'], $conn) : $err = true;
+    !empty($_POST['italianText']) ? $italianText = sanitize($_POST['italianText'], $conn) : $err = true;
 
-    !empty($_POST['englishTitle']) ? $englishTitle = sanitize($_POST['englishTitle'], $conn) : $err = true;
-
-    !empty($_POST['italianDescription']) ? $italianDescription = sanitize($_POST['italianDescription'], $conn) : $err = true;
-  
-    !empty($_POST['englishDescription']) ? $englishDescription = sanitize($_POST['englishDescription'], $conn) : $err = true;
+    !empty($_POST['englishText']) ? $englishText = sanitize($_POST['englishText'], $conn) : $err = true;
 
     $_POST['Category'] != "-1" ? $category = $_POST['Category'] : $err = true;
 
@@ -40,33 +41,34 @@
 
     if(!$err){
 
-      //insert news
+      //update press
 
-      $sql = "INSERT INTO news (FK_Categoria, Data) VALUES ('".$category."', '".$dateTime."')";
+      $sql = "UPDATE press SET FK_Categoria = ".$category.", Data = '".$dateTime."' WHERE ID = ".$pressID;
+
+    
+      
+      $conn->query($sql) or die ("Non mi va di aggiornare questa press. Error: ".$conn->error);
 
       
       
-      $conn->query($sql) or die ("Non mi va di inserire questa news. Error: ".$conn->error);
 
-      //insert contenuto_press per lingua
+      //insert contenuto_press per lingua  
 
-      //remember newsID
+      //insert english text with this ID
 
-      $newsID = $conn->insert_id;
+      $sql = "UPDATE contenuto_press SET Testo = '".$englishText."' WHERE FK_Press = '".$pressID."' AND FK_Lang = '1'";
 
-      //now insert english text with this ID
+      
 
-      $sql = "INSERT INTO contenuto_news (FK_Lang, FK_News, Titolo, Descrizione) VALUES ('1', '".$newsID."', '".$englishTitle."', '".$englishDescription."')";
-
-      $conn->query($sql) or die ("Non mi va di inserire il contenuto in Inglese di questa news. Error: ".$conn->error);
+      $conn->query($sql) or die ("Non mi va di aggiornare il contenuto in Inglese di questa press. Error: ".$conn->error);
 
       //insert italian text with this ID
 
-      $sql = "INSERT INTO contenuto_news (FK_Lang, FK_News, Titolo, Descrizione) VALUES ('2', '".$newsID."', '".$italianTitle."', '".$italianDescription."')";
+      $sql = "UPDATE contenuto_press SET Testo = '".$italianText."' WHERE FK_Press = '".$pressID."' AND FK_Lang = '2'";
 
-      $conn->query($sql) or die ("Non mi va di inserire il contenuto in Italiano di questa press. Error: ".$conn->error);
+      $conn->query($sql) or die ("Non mi va di aggiornare il contenuto in Italiano di questa press. Error: ".$conn->error);
     
-      //Multiple Images for News
+      //Multiple Images for Press
 
         $errors = array();
         $uploadedFiles = array();
@@ -78,17 +80,25 @@
 
         //handle thumbnail image
 
-        $thumbnailsFolder = "../img/news/thumbnails";
-        $hdFolder = "../img/news/hd";
+        $thumbnailsFolder = "../img/press/thumbnails";
+        $hdFolder = "../img/press/hd";
 
-         
-        $progressivo = 0;
+        
+        $sql = "SELECT MAX(Progressivo) as Progressivo FROM img_press WHERE FK_Press = ".$pressID;
+
+
+        $result = $conn->query($sql);
+        $temp = $result->fetch_array();
+
+        $progressivo = $temp['Progressivo'];
+
+        $progressivo++;
          
         foreach($_POST['images'] as $id){
 
           //link to the press
 
-          $sql = "UPDATE img_news SET FK_News = ".$newsID.", progressivo = ".$progressivo." WHERE ID = ".$id;
+          $sql = "UPDATE img_press SET FK_Press = ".$pressID.", progressivo = ".$progressivo." WHERE ID = ".$id;
 
           $conn->query($sql) or die ("non son riuscito a linkare la foto");
 
@@ -96,16 +106,13 @@
 
         }
 
-        header("Location: addnews.php?success=true");
+        header("Location: editpress.php?id=".$pressID."&success=true");
     
     }
 
   }
-        
+
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -124,15 +131,7 @@
   <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
-
   <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css">
-  <style type="text/css">
-    .selected{
-
-  border-color: blue;
-
-}
-  </style>
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -144,62 +143,65 @@
         <li class="breadcrumb-item">
           <a href="../index.php">.nobody&co.</a>
         </li>
-        <li class="breadcrumb-item active">Inserisci una News</li>
+        <li class="breadcrumb-item active">Modifica una Press</li>
       </ol>
       <!-- Icon Cards-->
       <div class="row">
         <div class="col-lg-12">
+          <div class="alert alert-warning" role="alert">
+            Per come è strutturato questo sistema, è consigliato prima di tutto di lavorare sulle immagini (aggiungerne, rimuoverne, cambiare l' ordine, etc..), poi sui contenuti.
+          </div>
           <?php
 
           if($success){
 
           ?>
-
           <div class="alert alert-success" role="alert">
-            Record inserito correttamente!
+            Record aggiornato correttamente!
           </div>
-
           <?php
-
-          } else if($err){
-
-          ?>
-          <div class="alert alert-danger" role="alert">
-            Si è verificato un problema, hai verificato di aver inserito i dati correttamente?
-          </div>
-
-          <?php
-
           }
+          ?>
+
+          <?php
+
+          $sql = "SELECT * FROM press, categoria WHERE press.FK_Categoria = categoria.ID AND press.ID = ".$getID;
+          $result = $conn->query($sql);
+
+          $press = $result->fetch_array();
 
           ?>
 
-          <?php echo $dateTime ?>
           <div class="card mx-auto">
               <div class="card-body">
                 <form method="POST" enctype="multipart/form-data">
                   <div class="form-group">
                     <div class="form-row">
                       <div class="col-md-6">
-                        <label for="InputItalianTitle">Titolo in Italiano</label>
-                        <input class="form-control" id="InputItalianTitle" type="text" aria-describedby="italianTitleHelp" placeholder="Inserisci il Titolo in Italiano" name="italianTitle" required>
+                        <?php
+
+                        $sql = "SELECT * FROM contenuto_press WHERE FK_Lang = 2 AND FK_Press = ".$getID;
+
+                        $result = $conn->query($sql);
+
+                        $contenuto = $result->fetch_array();
+
+                        ?>
+                        <label for="InputItalianText">Testo in Italiano</label>
+                        <input class="form-control" id="InputItalianText" type="text" aria-describedby="italianText" placeholder="Inserisci il Testo in Italiano" name="italianText"  value="<?php echo $contenuto['Testo'] ?>" required>
                       </div>
                       <div class="col-md-6">
-                        <label for="InputEnglishTitle">Titolo in Inglese</label>
-                        <input class="form-control" id="InputEnglishTitle" type="text" aria-describedby="englishTitleHelp" placeholder="Inserisci il Titolo in Inglese" name="englishTitle" required>
-                      </div>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="form-group">
-                    <div class="form-row">
-                      <div class="col-md-6">
-                        <label for="InputItalianDescription">Descrizione in Italiano</label>
-                        <textarea class="form-control" id="InputItalianDescription" type="text" aria-describedby="italianDescriptionHelp" placeholder="Inserisci la Descrizione in Italiano" name="italianDescription" required></textarea>
-                      </div>
-                      <div class="col-md-6">
-                        <label for="InputEnglishDescription">Descrizione in Inglese</label>
-                        <textarea class="form-control" id="InputEnglishDescription" type="text" aria-describedby="englishDescriptionHelp" placeholder="Inserisci la Descrizione in Inglese" name="englishDescription" required></textarea>
+                        <?php
+
+                        $sql = "SELECT * FROM contenuto_press WHERE FK_Lang = 1 AND FK_Press = ".$getID;
+
+                        $result = $conn->query($sql);
+
+                        $contenuto = $result->fetch_array();
+
+                        ?>
+                        <label for="InputEnglishText">Testo in Inglese</label>
+                        <input class="form-control" id="InputEnglishText" type="text" aria-describedby="englishTextHelp" placeholder="Inserisci il Testo in Inglese" name="englishText" value="<?php echo $contenuto['Testo'] ?>" required>
                       </div>
                     </div>
                   </div>
@@ -221,7 +223,7 @@
 
                           ?>
 
-                            <option value="<?php echo $row['ID'] ?>"><?php echo $row['Categoria'] ?></option>
+                            <option value="<?php echo $row['ID'] ?>" <?php if($press['Categoria'] == $row['Categoria']){echo "selected";} ?>><?php echo $row['Categoria']?></option>
 
                           <?php
 
@@ -233,9 +235,9 @@
                         </select>
                       </div>
                       <div class="col-md-6">
-                        <label for="InputDateTime">Data e Ora</label>
+                        <label for="InputEnglishText">Data e Ora</label>
                         <div class='input-group date' id='datetimepicker'>
-                          <input name="dateTime" type='text' class="form-control" required>
+                          <input name="dateTime" type='text' class="form-control" required value="<?php echo $press['Data'] ?>">
                           <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                           </span>
@@ -246,12 +248,60 @@
                   <hr>
                   <div class="form-group">
                       <div class="form-row">
+                        <div class="col">
+                          <label for="images">Immagini In Archivio</label>
+                            <div class="form-row" id="images">
+                             
+                            <?php 
+
+                            $sql = "SELECT * FROM img_press WHERE FK_Press = ".$getID." ORDER BY Progressivo";
+
+                            $result = $conn->query($sql) or die ($conn->error);
+
+                            while($image = $result->fetch_array()){
+
+                            ?>
+                            <div class="col-md-2">
+                              <div class="card">
+                                <div class="card-header" style="text-align: right; color: red">
+                                  <a href="util/press/unlinkimage.php?id=<?php echo $getID.'&img='.$image['ID'] ?>"><i class="fa fa-times-circle-o"></i></a>
+                                </div>
+                                <img class="card-img-top" src="../img/press/thumbnails<?php echo $image['Percorso'] ?>" alt="Card image cap">
+                                <div class="card-footer">
+                                  <div class="container" style="text-align: center">
+                                    <div class="row">
+                                      <div class="col-sm-6">
+                                        <a href="util/press/moveleft.php?id=<?php echo $getID?>&img=<?php echo $image['Progressivo'] ?>"><i class="fa fa-caret-left"></i></a>
+                                      </div>
+                                      <div class="col-sm-6">
+                                        <a href="util/press/moveright.php?id=<?php echo $getID?>&img=<?php echo $image['Progressivo'] ?>"><i class="fa fa-caret-right"></i></a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <?php
+
+                            }
+
+                            ?>
+
+                          </div>
+                          <p id="imagesHelp" class="form-text text-muted">
+                            Queste modifiche avranno effetto immediato sul Database.
+                          </p>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="form-row">
                         <div class="col-md-12">
-                          <label for="images">Immagini senza news</label>
+                          <label for="images">Immagini senza press</label>
                           <div class="row">
                             <?php 
 
-                            $sql = "SELECT * FROM img_news WHERE FK_News is null";
+                            $sql = "SELECT * FROM img_press WHERE FK_Press is null";
                             $result = $conn->query($sql);
 
                             while($row = $result->fetch_assoc()){
@@ -264,7 +314,7 @@
                                   <input type="checkbox" class="d-none" name="images[]" value="<?php echo $row['ID'] ?>">
                                 </div>
                                 <div class="card-body text-center">
-                                  <img class="img-fluid" src='<?php echo "../img/news/thumbnails".$row['Percorso']; ?>'>
+                                  <img class="img-fluid" src='<?php echo "../img/press/thumbnails".$row['Percorso']; ?>'>
                                 </div>
                               </div>
                             </div>
@@ -276,8 +326,8 @@
                           </div>
                         </div>
                       </div>
-                  </div>  
-                  <button class="btn btn-primary btn-block" type="submit" name="submit">Inserisci in Archivio</button>
+                  </div> 
+                  <button class="btn btn-primary btn-block" type="submit" name="submit">Aggiorna in Archivio</button>
                 </form>
               </div>
             </div>
@@ -321,28 +371,33 @@
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <!-- Page level plugin JavaScript-->
+    <script src="vendor/chart.js/Chart.min.js"></script>
     <script src="vendor/datatables/jquery.dataTables.js"></script>
     <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin.min.js"></script>
     <!-- Custom scripts for this page-->
     <script src="js/sb-admin-datatables.min.js"></script>
-
     <script src="js/bootstrap-datetimepicker.min.js"></script>
 
     <script src="js/bootstrap-datetimepicker.it.js"></script>
 
+    
+    <!-- MOVE IMAGE RIGHT -->
     <script type="text/javascript">
+
       $(function () {
         $('#datetimepicker').datetimepicker();
       });
+
       $(".card-selectable").click(function(){
         $(this).toggleClass('selected');
         var $checkbox = $(this).find('input[type="checkbox"]');
         $checkbox.prop("checked",!$checkbox.prop("checked"))
-
       });
+      
     </script>
+
   </div>
 </body>
 

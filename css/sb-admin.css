@@ -483,3 +483,13 @@ footer.sticky-footer {
   margin-top: 10px;
 
 }
+
+.selected{
+
+  border-color: blue;
+
+}
+
+.selectable input[type="checkbox"] {
+  display: none;
+}

@@ -1,9 +1,7 @@
-<?php
+<?php 
 
   include("util/phplib.php");
-  
   checkIfLogged();
-
   require 'util/compressor/autoload.php';
 
 
@@ -24,8 +22,8 @@
 
         //handle thumbnail image
 
-        $thumbnailsFolder = "../img/press/thumbnails";
-        $hdFolder = "../img/press/hd";
+        $thumbnailsFolder = "../img/news/thumbnails";
+        $hdFolder = "../img/news/hd";
 
          
         foreach($_FILES["files"]["tmp_name"] as $key=>$tmp_name){
@@ -33,8 +31,7 @@
             $temp = $_FILES["files"]["tmp_name"][$key];
             $name = $_FILES["files"]["name"][$key];
              
-            if(empty($temp))
-            {
+            if(empty($temp)){
                 break;
             }
                          
@@ -60,13 +57,13 @@
 
             //load on db the images on img_press
 
-            $sql = "INSERT INTO img_press (FK_Press, Percorso, Progressivo) VALUES (NULL, '".$pathname."', '0')";
+            $sql = "INSERT INTO img_news (FK_News, Percorso, Progressivo) VALUES (NULL, '".$pathname."', '0')";
 
-            $conn->query($sql) or die ("Non mi va di inserire l' immagine di questa press. Error: ".$conn->error);
+            $conn->query($sql) or die ("Non mi va di inserire l' immagine di questa news. Error: ".$conn->error);
   
         }
 
-        header("Location: managepressimages.php?success=true");
+        header("Location: managenewsimages.php?success=true");
     
     }
 
@@ -91,7 +88,12 @@
   <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
+  <style type="text/css">
+    
+  
 
+
+  </style>
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -103,12 +105,12 @@
         <li class="breadcrumb-item">
           <a href="../index.php">.nobody&co.</a>
         </li>
-        <li class="breadcrumb-item active">Archivio Immagini PRESS</li>
+        <li class="breadcrumb-item active">Archivio Immagini NEWS</li>
       </ol>
       <!-- Example DataTables Card-->
       <div class="card mb-3">
         <div class="card-header">
-            <i class="fa fa-file"></i> Inserisci altre immagini per PRESS
+            <i class="fa fa-file"></i> Inserisci altre immagini per NEWS
         </div>
         <div class="card-body">
           <form method="POST" enctype="multipart/form-data">
@@ -134,7 +136,7 @@
           <div class="row">
             <?php 
 
-            $sql = "SELECT * FROM img_press";
+            $sql = "SELECT * FROM img_news";
             $result = $conn->query($sql);
 
             while($row = $result->fetch_assoc()){
@@ -143,11 +145,11 @@
             <div class="col-sm-3">
               <div class="card">
                 <div class="card-header">
-                  <a href="util/press/removeimage.php?img=<?php echo $row['ID'] ?>" class="trash btn btn-danger"><i class="fa fa-trash-o"></i></a>
-                  <a href="updatethumbnail.php?id=<?php echo $row['ID'] ?>&type=press" class="btn btn-warning view_data"><i class="fa fa-gear"></i></a>
+                  <a href="util/news/removeimage.php?img=<?php echo $row['ID'] ?>" class="trash btn btn-danger"><i class="fa fa-trash-o"></i></a>
+                  <a href="updatethumbnail.php?id=<?php echo $row['ID'] ?>&type=news" class="btn btn-warning view_data"><i class="fa fa-gear"></i></a>
                 </div>
                 <div class="card-body text-center">
-                  <img class="img-fluid" src='<?php echo "../img/press/thumbnails".$row['Percorso']; ?>'>
+                  <img class="img-fluid" src='<?php echo "../img/news/thumbnails".$row['Percorso']; ?>'>
                 </div>
               </div>
             </div>
@@ -208,9 +210,37 @@
     <script src="js/sb-admin-datatables.min.js"></script>
     <script src="js/sb-admin-charts.min.js"></script>
 
-    
-    
- 
+    <script type="text/javascript">
+      
+      /*$(".card-selectable").click(function(){
+        
+        if($(this).hasClass("selected")){
+
+          $(this).removeClass("selected");
+
+        }else{
+
+          $(this).addClass("selected");
+
+        }
+
+      });
+*/
+    </script>
+      <script type="text/javascript">
+      $(function () {
+        $('#datetimepicker').datetimepicker();
+      });
+
+      $(".card-selectable").click(function(){
+        $(this).toggleClass('selected');
+        var $checkbox = $(this).find('input[type="checkbox"]');
+        $checkbox.prop("checked",!$checkbox.prop("checked"))
+
+      });
+    </script>
+
+  </div>
 </body>
 
 </html>

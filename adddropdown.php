@@ -1,27 +1,20 @@
 <?php
 
-  include("util/phplib.php");
-  
-  checkIfLogged();
 
+  include("util/phplib.php");
+  checkIfLogged();
+  
+  //Init
   $err = false;
   $success = false;
 
   if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-    if(isset($_POST['Nome'])){
-
-      $nome = sanitize($_POST['Nome'], $conn);
-
-    } else {
-
-      $err = true;
-
-    }
+    !empty($_POST['dropdown']) ? $dropdown = sanitize($_POST['dropdown'], $conn) : $err = true;
 
     if(!$err){
 
-      $sql = "INSERT INTO categoria (Categoria) VALUES ('".$nome."')";
+      $sql = "INSERT INTO dropdown (Dropdown) VALUES ('".$dropdown."')";
       $conn->query($sql);
       $success = true;
 
@@ -56,10 +49,7 @@
     <div class="container-fluid">
       <!-- Breadcrumbs-->
       <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="../index.php">.nobody&co.</a>
-        </li>
-        <li class="breadcrumb-item active">Inserisci una Categoria</li>
+        <li class="breadcrumb-item active">Insert a Dropdown</li>
       </ol>
       <!-- Icon Cards-->
       <div class="row">
@@ -71,7 +61,16 @@
 
           ?>
           <div class="alert alert-success" role="alert">
-            Record inserito correttamente!
+            Inserted Record correctly
+          </div>
+
+          <?php
+
+          } else if($err){
+
+          ?>
+          <div class="alert alert-danger" role="alert">
+            A problem occurred. Are you sure to have put the right datas? 
           </div>
           <?php
           }
@@ -82,14 +81,14 @@
                   <div class="form-group">
                     <div class="form-row">
                       <div class="col-md-6">
-                        <label for="InputCategory">Nome della Categoria</label>
-                        <input class="form-control" id="InputCategory" type="number" aria-describedby="categoryHelp" placeholder="Inserisci il nome della categoria" name="Nome" required>
+                        <label for="inputDropdown">Dropdown Value</label>
+                        <input class="form-control" id="inputDropdown" type="number" aria-describedby="dropdownHelp" placeholder="Insert dropdown value" name="dropdown" required>
                       </div>
                     </div>
                   </div>
                   <hr>
                   <hr>
-                  <button class="btn btn-primary btn-block" type="submit" name="submit">Inserisci in Archivio</button>
+                  <button class="btn btn-primary btn-block" type="submit" name="submit">Insert in Archive</button>
                 </form>
               </div>
             </div>
@@ -98,35 +97,7 @@
     </div>
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
-    <footer class="sticky-footer">
-      <div class="container">
-        <div class="text-center">
-          <small>Landor Managment System</small>
-        </div>
-      </div>
-    </footer>
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fa fa-angle-up"></i>
-    </a>
-    <!-- Logout Modal-->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Pronto ad Uscire?</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">Premi "Logout" qui sotto per concludere la Sessione</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Annulla</button>
-            <a class="btn btn-primary" href="util/logout.php">Logout</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <?php include("footer.php"); ?>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

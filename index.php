@@ -31,9 +31,6 @@
     <div class="container-fluid">
       <!-- Breadcrumbs-->
       <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="../index.php">.nobody&co.</a>
-        </li>
         <li class="breadcrumb-item active">Dashboard</li>
       </ol>
       <!-- Icon Cards-->
@@ -44,60 +41,38 @@
               <div class="card-body-icon">
                 <i class="fa fa-fw fa-comments"></i>
               </div>
-              <div class="mr-5">News</div>
+              <div class="mr-5">Table</div>
             </div>
-            <a class="card-footer text-white clearfix small z-1" href="managenews.php">
-              <span class="float-left"><i class="fa fa-fw fa-gear"></i> Gestisci le News</span>
+            <a class="card-footer text-white clearfix small z-1" href="manage.php">
+              <span class="float-left"><i class="fa fa-fw fa-gear"></i>Manage Table</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
               </span>
             </a>
-            <a class="card-footer text-white clearfix small z-1" href="addnews.php">
-              <span class="float-left"><i class="fa fa-fw fa-plus"></i> Aggiungi una News</span>
+            <a class="card-footer text-white clearfix small z-1" href="add.php">
+              <span class="float-left"><i class="fa fa-fw fa-plus"></i>Insert a row</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
               </span>
             </a>
           </div>
-        </div>
+        </div>  
         <div class="col-xl-3 col-sm-6 mb-3">
-          <div class="card text-white bg-warning o-hidden h-100">
-            <div class="card-body">
-              <div class="card-body-icon">
-                <i class="fa fa-fw fa-list"></i>
-              </div>
-              <div class="mr-5">Press</div>
-            </div>
-            <a class="card-footer text-white clearfix small z-1" href="managepress.php">
-              <span class="float-left"><i class="fa fa-fw fa-gear"></i> Gestisci le Press</span>
-              <span class="float-right">
-                <i class="fa fa-angle-right"></i>
-              </span>
-            </a>
-            <a class="card-footer text-white clearfix small z-1" href="addpress.php">
-              <span class="float-left"><i class="fa fa-fw fa-plus"></i> Inserisci una Press</span>
-              <span class="float-right">
-                <i class="fa fa-angle-right"></i>
-              </span>
-            </a>
-          </div>
-        </div>      
-        <div class="col-xl-3 col-sm-6 mb-3">
-          <div class="card text-white bg-success o-hidden h-100">
+          <div class="card text-white bg-danger o-hidden h-100">
             <div class="card-body">
               <div class="card-body-icon">
                 <i class="fa fa-fw fa-filter"></i>
               </div>
-              <div class="mr-5">Categorie</div>
+              <div class="mr-5">Dropdown</div>
             </div>
-            <a class="card-footer text-white clearfix small z-1" href="managecategory.php">
-              <span class="float-left"><i class="fa fa-fw fa-gear"></i> Gestisci le Categorie</span>
+            <a class="card-footer text-white clearfix small z-1" href="managedropdown.php">
+              <span class="float-left"><i class="fa fa-fw fa-gear"></i>Manage Dropdown</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
               </span>
             </a>
             <a class="card-footer text-white clearfix small z-1" href="addcategory.php">
-              <span class="float-left"><i class="fa fa-fw fa-plus"></i> Inserisci una Categoria</span>
+              <span class="float-left"><i class="fa fa-fw fa-plus"></i>Insert a row</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
               </span>
@@ -105,79 +80,26 @@
           </div>
         </div>
         <div class="col-xl-3 col-sm-6 mb-3">
-          <div class="card text-white bg-info o-hidden h-100">
+          <div class="card text-white bg-success o-hidden h-100">
             <div class="card-body">
               <div class="card-body-icon">
                 <i class="fa fa-fw fa-file"></i>
               </div>
-              <div class="mr-5">Immagini</div>
+              <div class="mr-5">Images</div>
             </div>
-            <a class="card-footer text-white clearfix small z-1" href="managepressimages.php">
-              <span class="float-left"><i class="fa fa-fw fa-gear"></i> Gestisci le Immagini PRESS</span>
-              <span class="float-right">
-                <i class="fa fa-angle-right"></i>
-              </span>
-            </a>
-            <a class="card-footer text-white clearfix small z-1" href="managenewsimages.php">
-              <span class="float-left"><i class="fa fa-fw fa-gear"></i> Gestisci le Immagini NEWS</span>
+            <a class="card-footer text-white clearfix small z-1" href="manageimages.php">
+              <span class="float-left"><i class="fa fa-fw fa-gear"></i>Manage Images</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
               </span>
             </a>
           </div>
         </div>
-        <!--
-        <div class="col-xl-3 col-sm-6 mb-3">
-          <div class="card text-white bg-danger o-hidden h-100">
-            <div class="card-body">
-              <div class="card-body-icon">
-                <i class="fa fa-fw fa-support"></i>
-              </div>
-              <div class="mr-5">13 New Tickets!</div>
-            </div>
-            <a class="card-footer text-white clearfix small z-1" href="#">
-              <span class="float-left">View Details</span>
-              <span class="float-right">
-                <i class="fa fa-angle-right"></i>
-              </span>
-            </a>
-          </div>
-        </div>
-        -->
-      
       </div>
     </div>
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
-    <footer class="sticky-footer">
-      <div class="container">
-        <div class="text-center">
-          <small>Landor Managment System</small>
-        </div>
-      </div>
-    </footer>
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fa fa-angle-up"></i>
-    </a>
-    <!-- Logout Modal-->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Pronto ad Uscire?</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">Premi "Logout" qui sotto per concludere la Sessione</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Annulla</button>
-            <a class="btn btn-primary" href="util/logout.php">Logout</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <?php include("footer.php"); ?>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

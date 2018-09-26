@@ -4,32 +4,20 @@ $username = $password = $loginErr = "";
 
 session_start();
 
-/*if($_SESSION['session']==1){
-
-  header("Location: index.php");
-
-}
-
-session_destroy();
-*/
-
-//verifico se post già inviata
+//Check if Post
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
-  //connessione al db
+  //connect to DB
   include("util/phplib.php");
 
   $username = sanitize($_POST['username'], $conn);
   $password = sanitize($_POST['password'], $conn);
 
 
-  
-
-  //se non ci sono errori, procedo con inserimento nel db
-
+  //Encrypt password
   $passmd5 = md5($password);
 
-  /* lettura della tabella utenti */
+  //Query users
   $query="SELECT ID, Username FROM users WHERE Username='".$username."' and Password='".$passmd5."'";
   $result = $conn->query($query) or die ("Problema a fare il Login..");
   
@@ -49,12 +37,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $_SESSION['session'] = 1;
       $_SESSION['ID'] = $row['ID'];
       $_SESSION['Username'] = $username;
-      header("Location: index.php");  //ridirigo utente ad home page
+      header("Location: index.php");  //go to homepage
       exit;
 
     } else {
 
-      $loginErr = "Nome utente o password errati!";
+      $loginErr = "Username or Password incorrect!";
     
     }
 
@@ -87,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="card-body">
         <form method="POST">
           <div class="form-group">
-            <label for="InputUsername">Nome Utente</label>
+            <label for="InputUsername">Username</label>
             <input class="form-control" id="InputUsername" type="text" aria-describedby="usernameHelp" placeholder="Inserisci Nome Utente" name="username" required >
           </div>
           <div class="form-group">

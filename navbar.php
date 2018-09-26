@@ -17,53 +17,35 @@
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
             <i class="fa fa-fw fa-sitemap"></i>
-            <span class="nav-link-text">Gestione</span>
+            <span class="nav-link-text"> Managment</span>
           </a>
           <ul class="sidenav-second-level collapse" id="collapseMulti">
             <li>
-              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseNews"><i class="fa fa-fw fa-comments"></i> News</a>
+              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseNews"><i class="fa fa-fw fa-comments"></i> Table</a>
               <ul class="sidenav-third-level collapse" id="collapseNews">
                 <li>
-                  <a href="managenews.php"><i class="fa fa-fw fa-gear"></i> Gestisci le News</a>
+                  <a href="manage.php"><i class="fa fa-fw fa-gear"></i> Manage table</a>
                 </li>
                 <li>
-                  <a href="addnews.php"><i class="fa fa-fw fa-plus"></i> Inserisci una News</a>
+                  <a href="add.php"><i class="fa fa-fw fa-plus"></i> Add row</a>
                 </li>
               </ul>
             </li>
             <li>
-              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePress"><i class="fa fa-fw fa-list"></i> Press</a>
-              <ul class="sidenav-third-level collapse" id="collapsePress">
-                <li>
-                  <a href="managepress.php"><i class="fa fa-fw fa-gear"></i> Gestisci le Press</a>
-                </li>
-                <li>
-                  <a href="addpress.php"><i class="fa fa-fw fa-plus"></i> Inserisci una Press</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseCategorie"><i class="fa fa-fw fa-filter"></i> Categorie</a>
+              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseCategorie"><i class="fa fa-fw fa-filter"></i> Dropdown</a>
               <ul class="sidenav-third-level collapse" id="collapseCategorie">
                 <li>
-                  <a href="managecategory.php"><i class="fa fa-fw fa-gear"></i> Gestisci le Categorie</a>
+                  <a href="managedropdown.php"><i class="fa fa-fw fa-gear"></i> Manage dropdown</a>
                 </li>
                 <li>
-                  <a href="addcategory.php"><i class="fa fa-fw fa-plus"></i> Inserisci una Categoria</a>
+                  <a href="adddropdown.php"><i class="fa fa-fw fa-plus"></i> Insert row</a>
                 </li>
               </ul>
             </li>
             <li>
-              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseImmagini"><i class="fa fa-fw fa-file"></i> Gestione Immagini</a>
-              <ul class="sidenav-third-level collapse" id="collapseImmagini">
-                <li>
-                  <a href="managenewsimages.php"><i class="fa fa-fw fa-gear"></i> Gestisci le Immagini NEWS</a>
-                </li>
-                <li>
-                  <a href="managepressimages.php"><i class="fa fa-fw fa-gear"></i> Gestisci le Immagini PRESS</a>
-                </li>
-              </ul>
+              <a href="manageimages.php"><i class="fa fa-fw fa-gear"></i> Manage Images</a>
             </li>
+            
           </ul>
         </li>
         <li class="nav-item">
